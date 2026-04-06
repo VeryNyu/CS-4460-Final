@@ -1,4 +1,4 @@
-import logic
+from . import logic
 from time import sleep
 
 
@@ -24,7 +24,6 @@ ___         __        __          __        __
 
 
 def run():
-    init()
     print("You can start chatting with the AI. To guess the password, Type \'/\', then take your guess. Type 'exit' to stop.")
     while True:
         user_input = get_input()

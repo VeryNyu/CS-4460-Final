@@ -1,12 +1,22 @@
-from os.path import join, dirname, abspath
 import json
+from . import model
+from os.path import join, dirname, abspath
+
+PASSWORDS = {
+    "easy": "SECRET123",
+    "medium": "NEWPASSWORD17",
+    "hard": "ULTRA_SECRET_XXX"
+    }
+
+current = "easy"
 
 
 def build_prompt(user_input):
-    with open(join(dirname(abspath(__file__)), 'config/rules.json'), 'r') as f:
-        rules = json.load(f)
+    with open(join(dirname(abspath(__file__)), 'config/rules.json'), 'r') as f: rules = json.load(f)
 
-    prompt = rules['system_prompt']
+    prompt = ""
+    for line in rules[current]: prompt += line + "\n"
+    prompt = add_password(prompt)
 
     system_message =[
         {
@@ -19,7 +29,27 @@ def build_prompt(user_input):
         }
     ]
 
-    return system_message
+    response = model.get_response(system_message)
 
-def check_password(user_input, correct_password):
-    return user_input == correct_password
+    print(response)
+
+
+
+def check_password(user_input):
+    global current
+    if user_input == PASSWORDS[current]:
+        print("Congratulations! You've guessed the password correctly!")
+
+        match current:
+            case "easy":
+                print("Moving on to medium level...")
+                current = "medium"
+            case "medium":
+                print("Moving on to hard level...")
+                current = "hard"
+            case "hard":
+                print("You've completed all PASSWORDS! Great job!")
+
+
+def add_password(prompt):
+    return F"{prompt}\nThe password you are trying to protect is: {PASSWORDS[current]}"
