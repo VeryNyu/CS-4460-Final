@@ -7,4 +7,4 @@ class Play(object):
         print(f"Playing {self.name}: {self.description}")
     
     def get_input():
-        return input("Enter a play: ")
+        return input("Try talking to the AI: ")
