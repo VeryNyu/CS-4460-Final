@@ -7,14 +7,22 @@ def get_response(prompt):
     t = threading.Thread(target=spinner, args=(stop_event, "Generating response"))
     t.start()
 
-    response: ChatResponse = chat(
-        model="wizardlm2",
-        messages=prompt
-    )
-
-    stop_event.set()
-    t.join()
-    return response['message']['content']
+    try:
+        response: ChatResponse = chat(
+            model="wizardlm2",
+            messages=prompt
+        )
+    except exception as e:
+        play.end(f"Unknown error: {e}")
+    except ConnectionError:
+        play.end("Model is not running, call \'ollama run wizardlm2\'")
+    except ResponseError:()
+        play.end("Model not installed, call \'ollama pull wizardlm2\'")
+    else:
+        return response['message']['content']
+    finally:
+        stop_event.set()
+        t.join()
 
 
 def spinner(stop_event, message):
