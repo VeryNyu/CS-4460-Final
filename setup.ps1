@@ -18,6 +18,6 @@ if (!(Get-Command ollama -ErrorAction SilentlyContinue)) {
 }
 
 Write-Host "== Pulling model =="
-ollama pull llama3
+ollama pull wizardlm2
 
 Write-Host "== Done! Run: python main.py =="

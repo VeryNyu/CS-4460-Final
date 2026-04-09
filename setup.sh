@@ -3,7 +3,7 @@
 set -e
 
 echo "== Checking Python =="
-if ! command -v python3 &> /dev/null
+if ! command -v python &> /dev/null
 then
     echo "Python3 is required but not installed."
     exit 1
@@ -11,16 +11,16 @@ fi
 
 echo "== Creating virtual environment =="
 if [ ! -d "venv" ]; then
-    python3 -m venv venv
+    python -m venv venv
 else
     echo "venv already exists, skipping..."
 fi
 
 echo "== Activating virtual environment =="
-source venv/bin/activate
+source venv/Scripts/activate
 
 echo "== Installing dependencies =="
-pip install --upgrade pip
+python.exe -m pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "== Checking Ollama =="
@@ -43,7 +43,7 @@ else
 fi
 
 echo "== Pulling model (if needed) =="
-ollama pull llama3
+ollama pull wizardlm2
 
 echo "== Setup complete =="
 echo "Activate env and run:"

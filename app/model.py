@@ -7,7 +7,10 @@ def init():
     t = threading.Thread(target=spinner, args=(stop_event, "Warming model"))
     t.start()
 
-    generate(model="wizardlm2")
+    try:
+        generate(model="wizardlm2")
+    except ConnectionError:
+        print
     
     stop_event.set()
     t.join()
@@ -35,4 +38,4 @@ def spinner(stop_event, message):
             sys.stdout.write(f"\r{message}... {char}")
             sys.stdout.flush()
             time.sleep(0.1)
-    sys.stdout.write("\rDone!        \n")
+    sys.stdout.write("\rDone!             \n")

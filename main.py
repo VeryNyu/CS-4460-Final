@@ -9,6 +9,8 @@ def main():
         play.run()
     except KeyboardInterrupt:
         play.end()
+    except ConnectionError:
+        play.end("Please")
 
 
 if __name__ == "__main__":

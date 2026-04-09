@@ -41,8 +41,8 @@ def get_input():
     return input("You: ")
 
 
-def end():
-    print("Thank you for playing!")
+def end(s="Thank you for playing!"):
+    print(s)
     for i in range(3):
         print(".", end='', flush=True)
         sleep(1)
