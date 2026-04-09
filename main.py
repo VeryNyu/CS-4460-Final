@@ -1,16 +1,15 @@
-from app import play, model
+from app import play
 
 
 def main():
     play.init()
-    model.init()
 
     try:
         play.run()
     except KeyboardInterrupt:
         play.end()
     except ConnectionError:
-        play.end("Please")
+        play.end("Please initiate wizardlm2 by running \'ollama run wizardlm2\' within your terminal")
 
 
 if __name__ == "__main__":
