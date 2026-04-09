@@ -1,50 +1,58 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e
+step() {
+  echo -e "\n== $1 =="
+}
 
-echo "== Checking Python =="
-if ! command -v python &> /dev/null
-then
-    echo "Python3 is required but not installed."
-    exit 1
+VENV_DIR="venv"
+ACTIVATE_SCRIPT="$VENV_DIR/bin/activate"
+
+step "Checking Python"
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "Python3 is required but not installed."
+  exit 1
 fi
 
-echo "== Creating virtual environment =="
-if [ ! -d "venv" ]; then
-    python -m venv venv
+step "Creating virtual environment"
+if [ ! -d "$VENV_DIR" ]; then
+  python3 -m venv "$VENV_DIR"
 else
-    echo "venv already exists, skipping..."
+  echo "Virtual environment already exists."
 fi
 
-echo "== Activating virtual environment =="
-source venv/Scripts/activate
+step "Activating virtual environment"
+if [ ! -f "$ACTIVATE_SCRIPT" ]; then
+  echo "Activation script not found: $ACTIVATE_SCRIPT"
+  exit 1
+fi
+# shellcheck disable=SC1090
+source "$ACTIVATE_SCRIPT"
 
-echo "== Installing dependencies =="
-python.exe -m pip install --upgrade pip
+step "Installing dependencies"
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "== Checking Ollama =="
-if ! command -v ollama &> /dev/null
-then
-    echo "Installing Ollama..."
-    curl -fsSL https://ollama.com/install.sh | sh
+step "Checking Ollama"
+if ! command -v ollama >/dev/null 2>&1; then
+  echo "Installing Ollama..."
+  curl -fsSL https://ollama.com/install.sh | sh
 else
-    echo "Ollama already installed."
+  echo "Ollama already installed."
 fi
 
-echo "== Ensuring Ollama is running =="
-if ! pgrep -x "ollama" > /dev/null
-then
-    ollama serve > /dev/null 2>&1 &
-    sleep 3
-    echo "Ollama started."
+step "Ensuring Ollama is running"
+if ! pgrep -x "ollama" >/dev/null 2>&1; then
+  ollama serve >/dev/null 2>&1 &
+  sleep 3
+  echo "Ollama started."
 else
-    echo "Ollama already running."
+  echo "Ollama already running."
 fi
 
-echo "== Pulling model (if needed) =="
+step "Pulling model"
 ollama pull wizardlm2
 
-echo "== Setup complete =="
-echo "Activate env and run:"
-echo "source venv/bin/activate && python main.py"
+step "Setup complete"
+echo "Run:"
+echo "source $ACTIVATE_SCRIPT && python main.py"
