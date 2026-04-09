@@ -6,7 +6,7 @@ step() {
 }
 
 VENV_DIR="venv"
-ACTIVATE_SCRIPT="$VENV_DIR/bin/activate"
+ACTIVATE_SCRIPT="$VENV_DIR/Script/activate"
 
 step "Checking Python"
 if ! command -v python3 >/dev/null 2>&1; then
