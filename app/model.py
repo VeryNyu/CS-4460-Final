@@ -1,4 +1,5 @@
-from ollama import ChatResponse, chat
+from ollama import ChatResponse, chat, ResponseError
+from app import play 
 import threading, time, sys
 
 
@@ -12,12 +13,11 @@ def get_response(prompt):
             model="wizardlm2",
             messages=prompt
         )
-    except exception as e:
-        play.end(f"Unknown error: {e}")
-    except ConnectionError:
-        play.end("Model is not running, call \'ollama run wizardlm2\'")
-    except ResponseError:()
-        play.end("Model not installed, call \'ollama pull wizardlm2\'")
+    except ResponseError as e:
+        match e.status_code:
+            case 404:
+                play.end("Model not installed, call \'ollama pull wizardlm2\'")
+            case _: print(f"ERROR: {e.error}")
     else:
         return response['message']['content']
     finally:
@@ -31,4 +31,4 @@ def spinner(stop_event, message):
             sys.stdout.write(f"\r{message}... {char}")
             sys.stdout.flush()
             time.sleep(0.1)
-    sys.stdout.write(f"\rDone!{(' ') * 20}\n")
+    sys.stdout.write(f"\r{(' ') * 25}\n")
