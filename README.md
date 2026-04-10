@@ -19,7 +19,7 @@ Runs a small language model locally to simulate a social engineering hack.
 
 ## Run
 ```bash
-python run.py
+python main.py
 ```
 
 ## Notes
